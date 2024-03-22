@@ -6,6 +6,7 @@ import {
   type GuildTextBasedChannel,
 } from 'discord.js';
 import { getColorFromImage } from './getColor';
+import { focalorsLogger } from '../Client/Ryxz';
 
 const parser = new Parser();
 
@@ -20,9 +21,9 @@ export const checkVideo = async (client: Client) => {
   }>;
 
   const rawData = await fs
-    .readFile(`${__dirname}/../../video.json`)
+    .readFile(`${__dirname}/../../video.json`, 'utf-8')
     .catch(console.error);
-  const jsonData: { id: string } = JSON.parse(JSON.stringify(rawData));
+  const jsonData: { id: string } = JSON.parse(rawData as string);
 
   if (jsonData.id !== data.items[0].id) {
     await fs.writeFile(
