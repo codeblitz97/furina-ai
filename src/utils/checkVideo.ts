@@ -7,18 +7,21 @@ import {
 } from 'discord.js';
 import { getColorFromImage } from './getColor';
 import { focalorsLogger } from '../Client/Ryxz';
+import { generateRandomNumber } from './randomNumber';
 
 const parser = new Parser();
 
 export const checkVideo = async (client: Client) => {
   const data = (await parser
     .parseURL(
-      `https://www.youtube.com/feeds/videos.xml?channel_id=UCmgBmhcE2K7uL08MDGS01ow`
+      `https://www.youtube.com/feeds/videos.xml?channel_id=UCmgBmhcE2K7uL08MDGS01ow&v=${generateRandomNumber(
+        7
+      )}`
     )
     .catch(console.error)) as unknown as Output<{
     id?: string;
     author?: string;
-  }>;
+  }>; //! Used random number here each time requesting. https://stackoverflow.com/questions/61806126/is-it-possible-to-retrieve-youtubes-xml-feed-with-an-api-key
 
   const rawData = await fs
     .readFile(`${__dirname}/../../video.json`, 'utf-8')
