@@ -79,11 +79,6 @@ export default async function (
     );
 
     messages.push({
-      parts: [{ text: (await result.response).text() }],
-      role: 'model',
-    });
-
-    messages.push({
       parts: [
         {
           text: `[${message.author.displayName}]{${
@@ -92,6 +87,11 @@ export default async function (
         },
       ],
       role: 'user',
+    });
+
+    messages.push({
+      parts: [{ text: (await result.response).text() }],
+      role: 'model',
     });
 
     setMessage(messages);
