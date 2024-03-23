@@ -46,54 +46,58 @@ export default async function (
   client: Client<true>,
   handler: CommandKit
 ) {
-  if (message.author.bot) return;
-  focalorsLogger.debug(
-    'Algorithm processed array:',
-    `${processString(message.content)}`
-  );
-  focalorsLogger.debug(
-    'Condition check:',
-    `${processString(message.content).includes('furina')}`
-  );
-  if (message.type === MessageType.Reply) {
-    const msg1 = await message.fetchReference();
-    if (msg1.author.id !== client.user.id) return;
-  } else if (!processString(message.content).includes('furina')) return;
-  await message.channel.sendTyping();
+  try {
+    if (message.author.bot) return;
+    focalorsLogger.debug(
+      'Algorithm processed array:',
+      `${processString(message.content)}`
+    );
+    focalorsLogger.debug(
+      'Condition check:',
+      `${processString(message.content).includes('furina')}`
+    );
+    if (message.type === MessageType.Reply) {
+      const msg1 = await message.fetchReference();
+      if (msg1.author.id !== client.user.id) return;
+    } else if (!processString(message.content).includes('furina')) return;
+    await message.channel.sendTyping();
 
-  messages.push({
-    parts: [
-      {
-        text: `[${message.author.displayName}]{${
-          message.author.id
-        }}: ${message.content.toLowerCase()}`,
-      },
-    ],
-    role: 'user',
-  });
+    messages.push({
+      parts: [
+        {
+          text: `[${message.author.displayName}]{${
+            message.author.id
+          }}: ${message.content.toLowerCase()}`,
+        },
+      ],
+      role: 'user',
+    });
 
-  const chat = await model.startChat({
-    history: getMessage() as Content[],
-    generationConfig: { maxOutputTokens: 500 },
-  });
+    const chat = await model.startChat({
+      history: getMessage() as Content[],
+      generationConfig: { maxOutputTokens: 500 },
+    });
 
-  const result = await chat.sendMessage(
-    `[${message.author.displayName}]{${
-      message.author.id
-    }}: ${message.content.toLowerCase()}`
-  );
+    const result = await chat.sendMessage(
+      `[${message.author.displayName}]{${
+        message.author.id
+      }}: ${message.content.toLowerCase()}`
+    );
 
-  messages.push({
-    parts: [{ text: (await result.response).text() }],
-    role: 'model',
-  });
+    messages.push({
+      parts: [{ text: (await result.response).text() }],
+      role: 'model',
+    });
 
-  setMessage(messages);
+    setMessage(messages);
 
-  await message.reply({
-    content:
-      (await result.response).text() !== ''
-        ? (await result.response).text()
-        : 'You probably asked a dumb question or anything like that and the AI cannot generate a response based on your context. Please be aware of sending dumb things',
-  });
+    await message.reply({
+      content:
+        (await result.response).text() !== ''
+          ? (await result.response).text()
+          : 'You probably asked a dumb question or anything like that and the AI cannot generate a response based on your context. Please be aware of sending dumb things',
+    });
+  } catch (error) {
+    focalorsLogger.error(`${(error as Error).message}`);
+  }
 }
