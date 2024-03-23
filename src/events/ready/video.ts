@@ -1,4 +1,4 @@
-import { ActivityType, type Client } from 'discord.js';
+import { ActivityType, time, type Client } from 'discord.js';
 import type { CommandKit } from 'commandkit';
 import { focalorsLogger } from '../../Client/Ryxz';
 import { getActivityTypeString } from '../../utils/activityType';
@@ -9,9 +9,12 @@ export default async function (
   client: Client<true>,
   handler: CommandKit
 ) {
-  focalorsLogger.debug('Checking video in interval (every 5 seconds)');
+  const TimeInterval = 5000;
+  focalorsLogger.debug(
+    `Checking video in interval (every ${TimeInterval / 1000} seconds)`
+  );
 
   setInterval(async () => {
     await checkVideo(client);
-  }, 5000);
+  }, TimeInterval);
 }
