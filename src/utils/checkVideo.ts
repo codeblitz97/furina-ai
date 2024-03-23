@@ -24,7 +24,6 @@ export const checkVideo = async (client: Client) => {
     .readFile(`${__dirname}/../../video.json`, 'utf-8')
     .catch(console.error);
   const jsonData: { id: string } = JSON.parse(rawData as string);
-
   if (jsonData.id !== data.items[0].id) {
     await fs.writeFile(
       `${__dirname}/../../video.json`,
@@ -64,6 +63,7 @@ export const checkVideo = async (client: Client) => {
     )) as GuildTextBasedChannel;
 
     await channel.send({
+      content: `Ladies and gentlemen, prepare yourselves for the unveiling of my latest masterpiece as I, Furina, graciously bestow upon you a new YouTube video for your viewing pleasure.\n@everyone`,
       embeds: [youtubeEmbed],
     });
   }
