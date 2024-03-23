@@ -62,7 +62,7 @@ export const checkVideo = async (client: Client) => {
 
     const guild = await client.guilds.fetch('848841415940898827');
     const channel = (await guild.channels.fetch(
-      '1085108391174737920'
+      '1064166855943671888'
     )) as GuildTextBasedChannel;
 
     await channel.send({
