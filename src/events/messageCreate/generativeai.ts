@@ -1,4 +1,9 @@
-import { type Message, type Client, MessageType } from 'discord.js';
+import {
+  type Message,
+  type Client,
+  MessageType,
+  EmbedBuilder,
+} from 'discord.js';
 import type { CommandKit } from 'commandkit';
 import {
   GoogleGenerativeAI,
@@ -62,17 +67,6 @@ export default async function (
     } else if (!processString(message.content).includes('furina')) return;
     await message.channel.sendTyping();
 
-    messages.push({
-      parts: [
-        {
-          text: `[${message.author.displayName}]{${
-            message.author.id
-          }}: ${message.content.toLowerCase()}`,
-        },
-      ],
-      role: 'user',
-    });
-
     const chat = await model.startChat({
       history: getMessage() as Content[],
       generationConfig: { maxOutputTokens: 500 },
@@ -89,6 +83,17 @@ export default async function (
       role: 'model',
     });
 
+    messages.push({
+      parts: [
+        {
+          text: `[${message.author.displayName}]{${
+            message.author.id
+          }}: ${message.content.toLowerCase()}`,
+        },
+      ],
+      role: 'user',
+    });
+
     setMessage(messages);
 
     await message.reply({
@@ -99,5 +104,16 @@ export default async function (
     });
   } catch (error) {
     focalorsLogger.error(`${(error as Error).message}`);
+
+    await message.reply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor('Red')
+          .setTitle('An error occurred.')
+          .setDescription(
+            'Now an error occurred. You can try re-sending the message, if you get this error, modify your message.'
+          ),
+      ],
+    });
   }
 }
