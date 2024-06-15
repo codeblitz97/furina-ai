@@ -11,7 +11,7 @@ new CommandKit({
   devGuildIds: ['848841415940898827'],
   devUserIds: ['733513636269785120', '1201153624718454845'],
   commandsPath: path.join(__dirname, 'commands'),
-  eventsPath: path.join(__dirname, 'events'),
+  eventsPath: path.join(__dirname, 'events')
 });
 
 focalors.start();
